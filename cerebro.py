@@ -7,10 +7,12 @@ import pandas as pd
 import traceback
 import numpy as np
 import re
+import requests
 
 def get_paperinfo(paper_url):
 
   #download the page
+  #response=requests.get(paper_url)
   response=httpx.get(paper_url)
 
   # check successful response
@@ -21,7 +23,7 @@ def get_paperinfo(paper_url):
     paper_doc = ""
   else:
     resp = True
-    print("Got it!")
+    print("Got it!",response.status_code)
     #parse using beautiful soup
     paper_doc = BeautifulSoup(response.text,'html.parser')
 
@@ -138,7 +140,6 @@ def ask(query, from_y = None, to_y = None,page_limits=None):
             # get url for the each page
             url = "https://scholar.google.com/scholar?start={}&q=".format(i) + query + "&hl=en&as_sdt=0,5"
             
-            #print(url)
             # function for the get content of each page
             doc,resp = get_paperinfo(url)
             if not resp:
@@ -159,7 +160,12 @@ def ask(query, from_y = None, to_y = None,page_limits=None):
 
             # add in paper repo dict
             #print(len(papername),len(year),len(author),len(publication))
-
+            for j in range(len(year),0,-1): 
+              if cjk_detect(papername[j-1]):
+                 del year[j-1]
+                 del papername[j-1]
+                 del author[j-1]
+                 del publication[j-1]
             
             data = {'Year': year, 'Title': papername, 'Author': author,'Publication': publication}
             
@@ -167,6 +173,8 @@ def ask(query, from_y = None, to_y = None,page_limits=None):
 
             new_entries = pd.DataFrame(data=data)
             print(new_entries)
+            if new_entries.empty:
+               break
 
             df = pd.concat([df,new_entries],ignore_index=True)
 
@@ -177,7 +185,8 @@ def ask(query, from_y = None, to_y = None,page_limits=None):
     except Exception: 
        traceback.print_exc()
        return df
-        
+    
+    sleep(30)
     return df
 
 
