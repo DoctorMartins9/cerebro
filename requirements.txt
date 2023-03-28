@@ -1,4 +1,6 @@
 pandas
 bs4
 httpx
+requests
 numpy
+openpyxl

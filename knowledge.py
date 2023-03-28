@@ -2,8 +2,8 @@ import cerebro, query_maker
 import pandas as pd
 
 # Build the query
-l1 = [ "unsupervised adaptation", "teacher student", "model compression"] # "knowledge distillation", "domain adaptation",
-l2 = ["online", "real-time", "edge", "human pose estimation", "hpe", "distributed", "collaborative", "knowledge distillation"]
+l1 = ["teacher student"] # "knowledge distillation", "domain adaptation", , , "model compression","teacher student" "unsupervised adaptation"
+l2 = [ "real-time", "edge", "human pose estimation", "hpe", "distributed", "collaborative", "knowledge distillation"] # "online",
 
 #print(query)
 df = pd.DataFrame(columns = ['Year', 'Title', 'Author','Publication'])
